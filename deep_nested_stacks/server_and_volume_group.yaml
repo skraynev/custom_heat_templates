@@ -1,0 +1,33 @@
+heat_template_version: 2013-05-23
+
+parameters:
+  volume_count:
+    type: number
+  image:
+    type: string
+  flavor:
+    type: string
+  network:
+    type: string
+  volume_size:
+    type: number
+
+resources:
+
+  server:
+    type: OS::Nova::Server
+    properties:
+      image: {get_param: image}
+      flavor: {get_param: flavor}
+      networks:
+        - network:  {get_param: network}
+
+  volumes:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count: {get_param: volume_count}
+      resource_def:
+        type: volume_with_attachment.yaml
+        properties:
+          server_id: {get_resource: server}
+          volume_size: {get_param: volume_size}
