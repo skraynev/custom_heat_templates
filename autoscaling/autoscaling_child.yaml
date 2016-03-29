@@ -1,0 +1,23 @@
+heat_template_version: 2013-05-23
+
+parameters:
+  key_name:
+    type: string
+  flavor:
+    type: string
+  image:
+    type: string
+  stack_id:
+    type: string
+
+resources:
+  my_serv:
+    type: OS::Nova::Server
+    properties:
+      # It's id of nested stack
+      # metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+      metadata: {"metering.stack": {get_param: stack_id}}
+      key_name: { get_param: key_name}
+      image: { get_param: image}
+      flavor: { get_param: flavor}
+
